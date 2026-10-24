@@ -6,7 +6,7 @@ startTelegramPoll();
 
 export const metadata: Metadata = {
   title: "Did your program's clock just double speed?",
-  description: "Test interface for Solana slot-time checks at /safu.",
+  description: "Check whether a Solana account's slot times still assume 400 ms.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
