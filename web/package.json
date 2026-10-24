@@ -1,5 +1,5 @@
 {
-  "name": "solana-slot-clock-web",
+  "name": "solana-clock-slot-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {

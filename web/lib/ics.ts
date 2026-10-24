@@ -15,7 +15,7 @@ export interface CalendarEvent {
 }
 
 export function buildIcs(events: CalendarEvent[]): string {
-  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//solana-slot-clock//safu//EN", "CALSCALE:GREGORIAN"];
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//solana-clock-slot//safu//EN", "CALSCALE:GREGORIAN"];
   for (const event of events) {
     const start = utcStamp(event.realUnix);
     lines.push(

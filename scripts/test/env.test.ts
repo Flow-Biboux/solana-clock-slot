@@ -12,7 +12,7 @@ describe("loadProjectEnv", () => {
   let previous: string | undefined;
 
   beforeEach(() => {
-    dir = mkdtempSync(join(tmpdir(), "slot-clock-env-"));
+    dir = mkdtempSync(join(tmpdir(), "clock-slot-env-"));
     previous = process.env[KEY];
   });
 

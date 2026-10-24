@@ -17,14 +17,14 @@ describe("defaultDeployKeypair", () => {
   });
 
   it("returns the only *-keypair.json", () => {
-    dir = mkdtempSync(join(tmpdir(), "slot-clock-kp-"));
+    dir = mkdtempSync(join(tmpdir(), "clock-slot-kp-"));
     writeFileSync(join(dir, "time_vesting-keypair.json"), "[1]");
     writeFileSync(join(dir, "notes.txt"), "ignore");
     assert.equal(defaultDeployKeypair(dir), join(dir, "time_vesting-keypair.json"));
   });
 
   it("rejects zero or several keypair files", () => {
-    dir = mkdtempSync(join(tmpdir(), "slot-clock-kp-"));
+    dir = mkdtempSync(join(tmpdir(), "clock-slot-kp-"));
     assert.throws(() => defaultDeployKeypair(dir), /No \*-keypair\.json/);
     writeFileSync(join(dir, "a-keypair.json"), "[]");
     writeFileSync(join(dir, "b-keypair.json"), "[]");
@@ -42,7 +42,7 @@ describe("target/deploy keypair", () => {
   });
 
   it("loads a keypair passed explicitly", () => {
-    const customDir = mkdtempSync(join(tmpdir(), "slot-clock-kp-"));
+    const customDir = mkdtempSync(join(tmpdir(), "clock-slot-kp-"));
     try {
       const generated = Keypair.generate();
       const path = join(customDir, "custom-keypair.json");
