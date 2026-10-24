@@ -1,0 +1,20 @@
+
+> solana-slot-clock-scripts@0.1.0 forecast
+> tsx src/forecast.ts --minutes 10 --verify
+
+Measured slot speed
+  average   238.5 ms/slot (30 samples, 30m 0s of history)
+  range     234.4 to 242.9 ms/slot
+  legacy    400 ms/slot (old assumption)
+
+Now: slot 514263815 at 2026-10-23T13:38:00Z (chain time)
+Local clock minus chain time: 1.5 s
+
+Forecast for 2026-10-23T13:48:00Z (+10 min)
+  real speed     slot 514266330 (likely between 514266285 and 514266375)
+  legacy 400 ms  slot 514265315  -> off by 1015 slots
+
+Waiting 10 min to verify...
+Actual slot at target time: ~514266333 (observed slot 514266337 at 2026-10-23T13:48:01Z)
+  real-speed forecast error   -3 slots (~-0.7 s)
+  legacy forecast error       -1018 slots (~-242.8 s)

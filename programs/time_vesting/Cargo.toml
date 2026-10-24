@@ -1,0 +1,21 @@
+[package]
+name = "time_vesting"
+version = "0.1.0"
+description = "Demo: a vesting schedule stored as legacy slots and as timestamps"
+edition = "2021"
+rust-version = "1.84"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "time_vesting"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = "=0.31.1"

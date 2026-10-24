@@ -1,0 +1,196 @@
+{
+  "address": "BmdN5w4ZGLhsBEw5cnGYeNs8sH3s2RBYYqgCv5sVfh21",
+  "metadata": {
+    "name": "time_vesting",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Demo: a vesting schedule stored as legacy slots and as timestamps"
+  },
+  "instructions": [
+    {
+      "name": "check_cliff",
+      "docs": [
+        "Logs whether the cliff is reached according to each schedule.",
+        "Between the two moments, the slot-based check says \"unlocked\"",
+        "while the timestamp-based check says \"locked\"."
+      ],
+      "discriminator": [
+        186,
+        165,
+        126,
+        121,
+        208,
+        233,
+        9,
+        184
+      ],
+      "accounts": [
+        {
+          "name": "vesting",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  101,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vesting.beneficiary",
+                "account": "Vesting"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_vesting",
+      "docs": [
+        "Stores a vesting schedule twice: once as slots (computed the \"old way\",",
+        "assuming 400 ms slots) and once as Unix timestamps.",
+        "This program holds no tokens. It only records values, for the demo."
+      ],
+      "discriminator": [
+        135,
+        184,
+        171,
+        156,
+        197,
+        162,
+        246,
+        44
+      ],
+      "accounts": [
+        {
+          "name": "beneficiary",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vesting",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  101,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "beneficiary"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "cliff_secs",
+          "type": "i64"
+        },
+        {
+          "name": "duration_secs",
+          "type": "i64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Vesting",
+      "discriminator": [
+        100,
+        149,
+        66,
+        138,
+        95,
+        200,
+        128,
+        241
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidSchedule",
+      "msg": "cliff must be >= 0 and duration must be >= cliff"
+    },
+    {
+      "code": 6001,
+      "name": "Overflow",
+      "msg": "arithmetic overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "Vesting",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "beneficiary",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "start_slot",
+            "type": "u64"
+          },
+          {
+            "name": "cliff_slot",
+            "type": "u64"
+          },
+          {
+            "name": "end_slot",
+            "type": "u64"
+          },
+          {
+            "name": "start_ts",
+            "type": "i64"
+          },
+          {
+            "name": "cliff_ts",
+            "type": "i64"
+          },
+          {
+            "name": "end_ts",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+# Secrets. The Helius key lives in .env. Program and wallet keypairs match *-keypair.json.
+.env
+.env.*
+!.env.example
+**/*-keypair.json
+
+# Anchor / Solana build output (includes target/deploy/*-keypair.json)
+target/
+.anchor/
+test-ledger/
+
+# JavaScript
+node_modules/
+scripts/node_modules/
+
+.DS_Store
