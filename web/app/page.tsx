@@ -202,7 +202,7 @@ export default function Page() {
 
   return (
     <main>
-      <p className="muted">Test interface · solana.biboux.com/safu</p>
+      <p className="muted">safu.biboux.com</p>
       <h1>Did your program&apos;s clock just double speed?</h1>
       <p>
         Mainnet slots went from 400 ms to 200 ms (SIMD-0525). Programs that stored time as slots still assume 400 ms,

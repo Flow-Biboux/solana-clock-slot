@@ -14,5 +14,6 @@ node_modules/
 scripts/node_modules/
 web/node_modules/
 web/.next/
+web/.vercel/
 
 .DS_Store

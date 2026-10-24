@@ -1,4 +1,4 @@
-export const BASE_PATH = "/safu";
+export const BASE_PATH = "";
 export const LEGACY_MS_PER_SLOT = 400;
 export const MS_PER_DAY = 86_400_000;
 export const LEGACY_SLOTS_PER_DAY = MS_PER_DAY / LEGACY_MS_PER_SLOT;
