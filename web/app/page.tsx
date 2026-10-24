@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { BASE_PATH, LEGACY_MS_PER_SLOT, SIMD_STEPS, SPEED_POLL_MS } from "@/lib/constants";
+import { ALPENGLOW_URL, BASE_PATH, LEGACY_MS_PER_SLOT, SIMD_0525_URL, SIMD_STEPS, SPEED_POLL_MS } from "@/lib/constants";
 import { classifyFieldName, type FieldKind } from "@/lib/classify";
 import { buildIcs, googleCalendarUrl, type CalendarEvent } from "@/lib/ics";
 import { durationSecs, ratePerDay, verdict } from "@/lib/time-math";
@@ -210,9 +210,9 @@ export default function Page() {
         set by the leader within a bound.
       </p>
       <p className="links">
-        <a href="https://solana.com/upgrades/reduced-slot-times">Article</a>
+        <a href={SIMD_0525_URL}>SIMD-0525</a>
+        <a href={ALPENGLOW_URL}>Alpenglow</a>
         <a href="https://github.com/Flow-Biboux/solana-clock-slot">GitHub</a>
-        <a href="https://solana.com/upgrades/reduced-slot-times">SIMD-0525</a>
       </p>
 
       <section className="card">
