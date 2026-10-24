@@ -9,6 +9,9 @@ export const SPEED_CACHE_MS = 5_000;
 export const SPEED_POLL_MS = 5_000;
 export const PERFORMANCE_SAMPLE_LIMIT = 30;
 
+export const SIMD_0525_URL = "https://solana.com/upgrades/reduced-slot-times";
+export const ALPENGLOW_URL = "https://solana.com/upgrades/alpenglow";
+
 export const SIMD_STEPS = [
   { date: "2026-08-21", slot: 440_640_000, ms: 350 },
   { date: "2026-08-28", slot: 442_368_000, ms: 300 },

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { CLUSTERS, SIMD_STEPS, LEGACY_MS_PER_SLOT, type Cluster } from "@/lib/constants";
+import { CLUSTERS, SIMD_0525_URL, SIMD_STEPS, LEGACY_MS_PER_SLOT, type Cluster } from "@/lib/constants";
 import { cachedSlotSpeed, connectionFor } from "@/lib/rpc";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       legacyMs: LEGACY_MS_PER_SLOT,
       speed,
       steps: SIMD_STEPS,
-      source: "https://solana.com/upgrades/reduced-slot-times",
+      source: SIMD_0525_URL,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "speed lookup failed";
