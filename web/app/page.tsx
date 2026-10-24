@@ -211,7 +211,7 @@ export default function Page() {
       </p>
       <p className="links">
         <a href="https://solana.com/upgrades/reduced-slot-times">Article</a>
-        <a href="https://github.com/Flow-Biboux/solana-slot-clock">GitHub</a>
+        <a href="https://github.com/Flow-Biboux/solana-clock-slot">GitHub</a>
         <a href="https://solana.com/upgrades/reduced-slot-times">SIMD-0525</a>
       </p>
 
@@ -322,7 +322,7 @@ export default function Page() {
                     const blob = new Blob([buildIcs(events)], { type: "text/calendar" });
                     const link = document.createElement("a");
                     link.href = URL.createObjectURL(blob);
-                    link.download = "slot-clock.ics";
+                    link.download = "clock-slot.ics";
                     link.click();
                   }}
                 >

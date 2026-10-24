@@ -1,7 +1,7 @@
 # Cursor prompt: "Slot Clock Check" web app
 
 Paste everything below the line into Cursor (Agent mode) at the root of the
-`solana-slot-clock` repo. Domain and repo URL are filled in. The article URL is the
+`solana-clock-slot` repo. Domain and repo URL are filled in. The article URL is the
 Google Doc; it is not stored in this repo yet.
 
 ---
@@ -112,7 +112,7 @@ the URL.
 ### 6. Page content around the tool
 - Title: "Did your program's clock just double speed?"
 - 3-line explanation, link to the article (Google Doc — URL not in the repo yet), link to the GitHub repo
-  (https://github.com/Flow-Biboux/solana-slot-clock), link to SIMD-0525 and the Solana Foundation pages.
+  (https://github.com/Flow-Biboux/solana-clock-slot), link to SIMD-0525 and the Solana Foundation pages.
 - "Try it" button that fills the devnet demo PDA from the README.
 - Limits section (copy from README "Limits").
 - Responsible disclosure note: "If you find an affected live protocol, contact its team

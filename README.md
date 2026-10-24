@@ -1,4 +1,4 @@
-# solana-slot-clock
+# solana-clock-slot
 
 Demo code for: "Time on Solana changed twice: what to check in your program".
 
