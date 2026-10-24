@@ -105,6 +105,31 @@ npm run forecast -- --minutes 10 --verify
   `CARGO_ENCODED_RUSTFLAGS="-Awarnings" RUSTUP_TOOLCHAIN=stable anchor idl build -p time_vesting -o target/idl/time_vesting.json`
 - The `bigint: Failed to load bindings` line printed by the scripts is a harmless web3.js warning.
 
+## Web app
+
+Test interface: `https://solana.biboux.com/safu` (`web/`, Next.js, `basePath` `/safu`).
+
+```bash
+cd web
+npm install
+npm test
+# server-side only, never sent to the browser:
+# HELIUS_RPC_MAINNET=https://mainnet.helius-rpc.com/?api-key=YOUR_KEY
+# HELIUS_RPC_DEVNET=https://devnet.helius-rpc.com/?api-key=YOUR_KEY
+# DATABASE_URL comes from the Vercel Neon integration
+# METRICS_KEY is the operator token for /safu/metrics detail rows
+# TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+npm run dev
+```
+
+On Vercel, set the project root to `web/`, add the Helius URLs, connect Neon so `DATABASE_URL` is injected, set `METRICS_KEY`, and attach `solana.biboux.com`. The Next app also reads the repo-root `.env` at startup. The app is only mounted at `/safu`. Public `/safu/metrics` shows counts. The detail list is returned only when `METRICS_KEY` or an approved personal key is sent as the `x-metrics-key` header.
+
+Anyone can submit "Request access" on that page. A Telegram message to `TELEGRAM_CHAT_ID` has Approve and Deny buttons. Approving posts the new key in that same chat. You copy it and send it yourself. Someone who already has a key can approve the next request from the metrics page.
+
+After deploy, register the bot webhook once. Do not log the bot token:
+
+`https://api.telegram.org/bot<token>/setWebhook?url=https://solana.biboux.com/safu/api/telegram`
+
 ## Limits
 
 - `check-vesting` reads account data, not program logic. It cannot know how a program
