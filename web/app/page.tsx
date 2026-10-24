@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { BASE_PATH, LEGACY_MS_PER_SLOT, SIMD_STEPS } from "@/lib/constants";
+import { BASE_PATH, LEGACY_MS_PER_SLOT, SIMD_STEPS, SPEED_POLL_MS } from "@/lib/constants";
 import { classifyFieldName, type FieldKind } from "@/lib/classify";
 import { buildIcs, googleCalendarUrl, type CalendarEvent } from "@/lib/ics";
 import { durationSecs, ratePerDay, verdict } from "@/lib/time-math";
@@ -40,6 +40,46 @@ interface CheckResponse {
   error?: string;
 }
 
+function ReportBox({
+  label,
+  open,
+  note,
+  status,
+  onOpen,
+  onNote,
+  onSubmit,
+}: {
+  label: string;
+  open: boolean;
+  note: string;
+  status: string;
+  onOpen: () => void;
+  onNote: (value: string) => void;
+  onSubmit: () => void;
+}) {
+  return (
+    <div>
+      <button type="button" className="secondary" onClick={onOpen}>
+        {label}
+      </button>
+      {open ? (
+        <div>
+          <label>
+            Note, optional
+            <textarea value={note} maxLength={500} onChange={(event) => onNote(event.target.value)} />
+          </label>
+          <div className="row">
+            <button type="button" onClick={onSubmit}>
+              Submit report
+            </button>
+          </div>
+        </div>
+      ) : null}
+      {status ? <p className="muted">{status}</p> : null}
+    </div>
+  );
+}
+
 function iso(unix?: number): string {
   if (unix === undefined) return "";
   return new Date(unix * 1000).toISOString().replace(".000Z", "Z");
@@ -56,6 +96,9 @@ export default function Page() {
   const [pending, setPending] = useState(false);
   const [manualKind, setManualKind] = useState<FieldKind>("absolute_slot");
   const [manualValue, setManualValue] = useState("");
+  const [reportOpen, setReportOpen] = useState<"pda" | "error" | null>(null);
+  const [reportNote, setReportNote] = useState("");
+  const [reportStatus, setReportStatus] = useState("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -67,19 +110,48 @@ export default function Page() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${BASE_PATH}/api/speed?cluster=${cluster}`)
-      .then(async (response) => {
+    async function loadSpeed() {
+      try {
+        const response = await fetch(`${BASE_PATH}/api/speed?cluster=${cluster}`);
         const body = (await response.json()) as SpeedResponse & { error?: string };
         if (!response.ok) throw new Error(body.error ?? "speed failed");
         if (!cancelled) setSpeed(body);
-      })
-      .catch((err: unknown) => {
+      } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "speed failed");
-      });
+      }
+    }
+    void loadSpeed();
+    const timer = setInterval(() => void loadSpeed(), SPEED_POLL_MS);
     return () => {
       cancelled = true;
+      clearInterval(timer);
     };
   }, [cluster]);
+
+  async function sendReport(kind: "pda" | "error") {
+    setReportStatus("");
+    const response = await fetch(`${BASE_PATH}/api/report`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        kind,
+        cluster,
+        address: kind === "pda" ? address : undefined,
+        program: kind === "pda" ? result?.program : undefined,
+        accountType: kind === "pda" ? result?.accountType : undefined,
+        verdict: kind === "pda" ? result?.verdict : undefined,
+        note: reportNote,
+      }),
+    });
+    const body = (await response.json()) as { error?: string };
+    if (!response.ok) {
+      setReportStatus(body.error ?? "report failed");
+      return;
+    }
+    setReportStatus("Sent. Thank you.");
+    setReportNote("");
+    setReportOpen(null);
+  }
 
   async function runCheck(typeName = accountType) {
     setPending(true);
@@ -137,15 +209,15 @@ export default function Page() {
         so those deadlines now arrive about twice as soon. Since Alpenglow, <span className="mono">Clock.unix_timestamp</span> is
         set by the leader within a bound.
       </p>
-      <p>
+      <p className="links">
+        <a href="https://solana.com/upgrades/reduced-slot-times">Article</a>
         <a href="https://github.com/Flow-Biboux/solana-slot-clock">GitHub</a>
-        {" · "}
         <a href="https://solana.com/upgrades/reduced-slot-times">SIMD-0525</a>
       </p>
 
       <section className="card">
         <h2>Live slot speed</h2>
-        <p className="mono">
+        <p className="mono speed">
           {cluster}: {speed ? `${speed.speed.avgMs.toFixed(1)} ms` : "loading"} (min {speed?.speed.minMs.toFixed(1) ?? "—"} / max{" "}
           {speed?.speed.maxMs.toFixed(1) ?? "—"}) · legacy assumption {LEGACY_MS_PER_SLOT} ms
         </p>
@@ -189,16 +261,6 @@ export default function Page() {
           <button type="button" disabled={pending} onClick={() => void runCheck()}>
             {pending ? "Checking…" : "Check"}
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              setCluster("devnet");
-              setAddress("");
-              setError("Devnet selected. Paste the vesting PDA printed by npm run create.");
-            }}
-          >
-            Try it on devnet
-          </button>
         </div>
         {error ? <p className="error">{error}</p> : null}
         {result ? (
@@ -212,7 +274,7 @@ export default function Page() {
               {result.accountType} · {result.program}
             </p>
             {result.fields.map((field) => (
-              <article key={field.name}>
+              <article className="field" key={field.name}>
                 <p className="mono">
                   {field.name} = {field.value} · {field.kind}
                 </p>
@@ -236,6 +298,17 @@ export default function Page() {
               </article>
             ))}
             <p className="muted">{result.note}</p>
+            {result.verdict === "AFFECTED" ? (
+              <ReportBox
+                label="Report this account"
+                open={reportOpen === "pda"}
+                note={reportNote}
+                status={reportStatus}
+                onOpen={() => setReportOpen(reportOpen === "pda" ? null : "pda")}
+                onNote={setReportNote}
+                onSubmit={() => void sendReport("pda")}
+              />
+            ) : null}
             {events.length > 0 ? (
               <div>
                 {events.map((event) => (
@@ -295,8 +368,29 @@ export default function Page() {
           <li>IDL decoding needs an on-chain IDL or a pasted IDL JSON. Pasted IDLs are not put in the URL.</li>
           <li>If you find an affected live protocol, contact its team before posting about it.</li>
         </ul>
-        <p className="muted">Data via Helius RPC</p>
+        <p className="muted">
+          Data via Helius RPC · <a href={`${BASE_PATH}/metrics`}>Report metrics</a>
+        </p>
       </section>
+      <div className="bug-dock">
+        {reportOpen === "error" ? (
+          <div className="card bug-panel">
+            <label>
+              Note, optional
+              <textarea value={reportNote} maxLength={500} onChange={(event) => setReportNote(event.target.value)} />
+            </label>
+            <div className="row">
+              <button type="button" onClick={() => void sendReport("error")}>
+                Submit report
+              </button>
+            </div>
+            {reportStatus ? <p className="muted">{reportStatus}</p> : null}
+          </div>
+        ) : null}
+        <button type="button" className="bug-fab" onClick={() => setReportOpen(reportOpen === "error" ? null : "error")}>
+          Report a bug
+        </button>
+      </div>
     </main>
   );
 }

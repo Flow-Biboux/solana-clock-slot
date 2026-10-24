@@ -5,7 +5,8 @@ export const LEGACY_SLOTS_PER_DAY = MS_PER_DAY / LEGACY_MS_PER_SLOT;
 export const SPEED_OFF_THRESHOLD = 0.05;
 export const IDL_MAX_BYTES = 200_000;
 export const RATE_LIMIT_PER_MINUTE = 20;
-export const SPEED_CACHE_MS = 60_000;
+export const SPEED_CACHE_MS = 5_000;
+export const SPEED_POLL_MS = 5_000;
 export const PERFORMANCE_SAMPLE_LIMIT = 30;
 
 export const SIMD_STEPS = [

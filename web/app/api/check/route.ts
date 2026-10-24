@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
-import anchor, { type Idl } from "@coral-xyz/anchor";
+import { AnchorProvider, BorshAccountsCoder, Program, type Idl } from "@coral-xyz/anchor";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { classifyFieldName, type FieldKind } from "@/lib/classify";
 import { CLUSTERS, IDL_MAX_BYTES, LEGACY_MS_PER_SLOT, type Cluster } from "@/lib/constants";
 import { rateLimit } from "@/lib/rate-limit";
 import { blockTimeNear, cachedSlotSpeed, connectionFor } from "@/lib/rpc";
 import { forecastUnix, intendedUnix, verdict } from "@/lib/time-math";
-
-const { AnchorProvider, BorshAccountsCoder, Program } = anchor;
 
 export const dynamic = "force-dynamic";
 
