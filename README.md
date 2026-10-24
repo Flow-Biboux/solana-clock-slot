@@ -105,6 +105,22 @@ npm run forecast -- --minutes 10 --verify
   `CARGO_ENCODED_RUSTFLAGS="-Awarnings" RUSTUP_TOOLCHAIN=stable anchor idl build -p time_vesting -o target/idl/time_vesting.json`
 - The `bigint: Failed to load bindings` line printed by the scripts is a harmless web3.js warning.
 
+## Web app
+
+Test interface: `https://solana.biboux.com/safu` (`web/`, Next.js, `basePath` `/safu`).
+
+```bash
+cd web
+npm install
+npm test
+# server-side only, never sent to the browser:
+# HELIUS_RPC_MAINNET=https://mainnet.helius-rpc.com/?api-key=YOUR_KEY
+# HELIUS_RPC_DEVNET=https://devnet.helius-rpc.com/?api-key=YOUR_KEY
+npm run dev
+```
+
+On Vercel, set the project root to `web/`, add those two env vars, and attach `solana.biboux.com`. The app is only mounted at `/safu`.
+
 ## Limits
 
 - `check-vesting` reads account data, not program logic. It cannot know how a program

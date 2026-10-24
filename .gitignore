@@ -12,5 +12,7 @@ test-ledger/
 # JavaScript
 node_modules/
 scripts/node_modules/
+web/node_modules/
+web/.next/
 
 .DS_Store
